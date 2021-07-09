@@ -24,7 +24,7 @@ def checkRoll(message):
         if len(message_text) > 1:
             name_file = open('names.txt', 'a')
             text = text.join(message_text[1:])
-            name = message.from_user.username
+            name = message.chat.id
             bot.reply_to(message, "Your name has been updated!\nThank You!")
             name_file.write('"'+str(name)+'" :')
             name_file.write('"'+text+'",')
@@ -36,24 +36,26 @@ def checkRoll(message):
         if len(message_text) > 1:
             update_file = open('update.txt', 'a')
             text = text.join(message_text[1:])
-            name = message.from_user.username
+            name = message.chat.id
             name_file = open('names.txt', 'r')
             names = name_file.read()
             name_file.close()
             names = names[:-1]
             names = '{' + names + '}'
             name_dict = json.loads(names)
+            print(name_dict)
             for key, value in name_dict.items():
-                if name == key:
+                if str(name) == str(key):
+                    print('inside')
                     name = value
                     t = time.ctime()
                     update_file.write(str(t)+'  :  ')
-            update_file.write(name+' ==> ')
-            update_file.write(text+'\n')
-            update_file.close()
-            bot.reply_to(message, "Your update has been noted and attendance is marked!\nThank You!")
-            '''if message.from_user.username == name:
-                bot.reply_to(message, "Can't be updated as you have not updated your name")'''
+                    update_file.write(name+' ==> ')
+                    update_file.write(text+'\n')
+                    update_file.close()
+                    bot.reply_to(message, "Your update has been noted and attendance is marked!\nThank You!")
+            if message.from_user.username == name:
+                bot.reply_to(message, "Can't be updated as you have not updated your name")
         else:
             bot.reply_to(message, "Hey! You forgot to mention your update\nTry again")
     elif message_text[0] == 'to_mentor':
